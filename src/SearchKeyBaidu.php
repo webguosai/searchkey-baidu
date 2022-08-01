@@ -50,9 +50,9 @@ class SearchKeyBaidu
             'ct'  => '!!',
             'tt'  => '111',
             // 落地页地址
-            'u'   => ($page),//urlencode
+            'u'   => urlencode($page),//urlencode
             // 来源地址
-            'su'  => ($referer),//urlencode
+            'su'  => urlencode($referer),//urlencode
         ];
 
         $url = $path . http_build_query($query);
