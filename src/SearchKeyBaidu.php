@@ -3,6 +3,7 @@
 namespace Webguosai;
 
 use Exception;
+use Webguosai\HttpClient;
 
 class SearchKeyBaidu
 {
@@ -98,9 +99,7 @@ class SearchKeyBaidu
     {
         $url = 'https://tongji.baidu.com/web5/' . $pathId . '/ajax/post';
 
-        $client   = new \Webguosai\HttpClient([
-            'timeout' => 5,
-        ]);
+
         $data     = [
             'siteId'     => $siteId,
             'order'      => 'start_time,desc',
@@ -114,10 +113,11 @@ class SearchKeyBaidu
             'method'     => 'trend/latest/a',
             'queryId'    => '',
         ];
-        $response = $client->post($url, $data, [
+        $response = (new HttpClient(['timeout' => 5]))->post($url, $data, [
             'cookie' => $cookie,
         ]);
 
+//        dump($response->headers);
         if ($response->ok()) {
             $data = $response->json();
 
