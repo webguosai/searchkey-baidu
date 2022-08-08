@@ -7,7 +7,29 @@ use Webguosai\HttpClient;
 
 class SearchKeyBaidu
 {
-    protected $keyName = 'baidu_find_mark_id';
+    protected $keyName = 'baidu_query_id';
+
+    /**
+     * 获取官方js
+     *
+     * @param $id
+     * @return string
+     */
+    public function getScript($id)
+    {
+        $jsPath = __DIR__ . '/count.js';
+        if (file_exists($jsPath)) {
+            // 获取官方代码
+            $code = file_get_contents($jsPath);
+
+            $queryParams = $this->keyName . '=' . $this->getVisitorId();
+
+            return str_replace(['{{queryParams}}', '{{id}}'], [$queryParams, $id], $code);
+        } else {
+            // 获取图片的形式
+            return $this->getScriptImage($id);
+        }
+    }
 
     /**
      * 获取js加载代码
@@ -15,12 +37,10 @@ class SearchKeyBaidu
      * @param string $id 统计代码id
      * @return string
      */
-    public function getScript($id)
+    public function getScriptImage($id)
     {
         $path = 'https://hm.baidu.com/hm.gif?';
 
-        $ip        = $_SERVER['REMOTE_ADDR'];
-        $userAgent = $_SERVER['HTTP_USER_AGENT'];
         $referer   = $_SERVER['HTTP_REFERER'];
 
         $page = $this->getFullUrl();
@@ -29,32 +49,8 @@ class SearchKeyBaidu
         } else {
             $page .= '&';
         }
-        $page .= $this->keyName . '=' . $this->shortText($ip . $userAgent);
+        $page .= $this->keyName . '=' . $this->getVisitorId();
 
-//        $query = [
-//            'si'  => $id,
-//            'cc'  => '1',
-//            'ck'  => '1',
-//            'cl'  => '32-bit',
-//            'ds'  => '768x1024',
-//            'vl'  => '946',
-//            'et'  => '0',
-//            'ja'  => '1',
-//            'ln'  => 'zh-cn',
-//            'lo'  => '0',
-//            'rnd' => '872961019',
-//            'v'   => '1.2.76',
-//            'lv'  => '2',
-//            'sn'  => '17865',
-//            'r'   => '0',
-//            'ww'  => '654',
-//            'ct'  => '!!',
-//            'tt'  => '111',
-//            // 落地页地址
-//            'u'   => ($page),//urlencode
-//            // 来源地址
-//            'su'  => ($referer),//urlencode
-//        ];
         $query = [
             'cc' => 1,
             'ck' => 1,
@@ -98,7 +94,6 @@ class SearchKeyBaidu
     public function query($pathId, $siteId, $cookie, $limit = 100)
     {
         $url = 'https://tongji.baidu.com/web5/' . $pathId . '/ajax/post';
-
 
         $data     = [
             'siteId'     => $siteId,
@@ -148,6 +143,15 @@ class SearchKeyBaidu
 
         throw new Exception($response->getErrorMsg());
     }
+
+    protected function getVisitorId()
+    {
+        $ip        = $_SERVER['REMOTE_ADDR'];
+        $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+        return $this->shortText($ip . $userAgent);
+    }
+
 
     protected function getFullUrl()
     {
