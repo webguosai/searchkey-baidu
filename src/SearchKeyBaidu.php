@@ -119,15 +119,16 @@ class SearchKeyBaidu
             if ($data['status'] === 0) {
                 $ret = [];
 
-                foreach ($data['data']['items'][1] as $key => $value) {
-                    $searchKey = $value[3];
-                    $page      = $value[2];
+                foreach ($data['data']['items'][0] as $key => $value) {
+                    $searchKey = $value[0]['detail']['from_word'];
+                    $page      = $value[0]['detail']['accessPage'];;
 
                     $rex = '#' . $this->keyName . '=([^$]+?)$#i';
                     if (preg_match($rex, $page, $mat)) {
                         //有些会显示--，过滤掉
                         if ($searchKey != '--') {
                             $ret[] = [
+                                'page'      => $page,
                                 'visitMark' => $mat[1],    //访客标识
                                 'searchKey' => $searchKey, //搜索词
                             ];
