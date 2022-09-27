@@ -38,6 +38,13 @@ try {
 }
 ```
 
+## 打赏
+
+<p>
+  <img src="https://wx4.sinaimg.cn/mw1024/008voDx3gy1h6l1azpwysj30u014wt9h.jpg" width="250" />
+  <img src="https://wx2.sinaimg.cn/mw1024/008voDx3gy1h6l1azp5vhj30u01aoadc.jpg" width="250" />
+</p>
+
 ## License
 
 MIT
